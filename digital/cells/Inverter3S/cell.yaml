@@ -1,0 +1,45 @@
+name:        Inverter3S
+type:        digital
+category:    row          # row | pad | frame
+function:    "Inversor con salida de tres estados"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   160.0
+  height_um:  215.0
+  origin:     [0.0, 0.0]
+  sites:      64.0                  # ancho / pitch de 2.5
+  shapes:     103
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [40.0, 10.0]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [40.0, 202.5]}
+  - {name: Data, direction: input, layer: "51/1", pos: [100.0, 107.5]}
+  - {name: OEB, direction: input, layer: "51/1", pos: [15.0, 72.5]}
+  - {name: Out, direction: output, layer: "51/1", pos: [145.0, 97.5]}
+
+site_contract:
+  compliant:  false
+  violations:
+    - "altura 215.0 (esperada 222.5)"
+    - "pozo n llega a y 215.0 (esperado 222.5)"
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/Inverter3S.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

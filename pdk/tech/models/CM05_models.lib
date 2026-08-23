@@ -1,0 +1,33 @@
+.MODEL CIDNMOS NMOS
++LEVEL    = 3              
++TOX      = 5.0249e-08
++NSUB     = 1.79729e+15
++GAMMA    = 0.546939
++PHI      = 0.338776
++VTO      = 0.583673
++DELTA    = 1.36735
++UO       = 539
++ETA      = 0.816327
++THETA    = 0.0408163
++KP       = 2.1e-05
++VMAX     = 1.71511e+06
++RSH      = 34.1451
++LD       = 1.9e-07
++CGDO     = 1.31e-10
++CGSO     = 1.31e-10  
++CGBO     = 1.00e-11   
++CJ       = 2.09e-4
++MJ       = 0.5      
++CJSW     = 3.68e-11  
++MJSW     = 0.33
++XJ       = 1.76e-7
+
+.MODEL CIDPMOS PMOS (
++LEVEL    = 3              TOX      = 2.5e-08        NSUB     = 6.455e+16
++GAMMA    = 1.067          PHI      = 0.793          VTO      = -0.981413
++DELTA    = 0.16129        UO       = 150            ETA      = 0.850427
++THETA    = 0.0641026      KP       = 1.92308e-05    VMAX     = 8.07712e+06
++RSH      = 53.2121        LD       = 2e-07          CGDO     = 2.76e-10
++CGSO     = 2.76e-10       CGBO     = 1.00e-11       CJ       = 8.205e-4
++MJ       = 0.5            CJSW     = 4.32e-10       MJSW     = 0.33
++XJ       = 5.27e-7 )

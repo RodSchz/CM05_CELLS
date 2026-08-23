@@ -1,0 +1,16 @@
+# Revision obligatoria del propietario en las areas criticas.
+# Requiere activar "Require review from Code Owners" en la proteccion de main.
+
+# Por defecto, todo lo revisa el coordinador
+*                       @RodSchz
+
+# Tecnologia y bloques: nunca se tocan sin revision
+/pdk/                   @RodSchz
+/blocks/                @RodSchz
+/scripts/               @RodSchz
+/.github/               @RodSchz
+/CONTRIBUTING.md        @RodSchz
+
+# Cuando asignes los diseniadores, agrega sus usuarios aqui:
+# /digital/cells/       @RodSchz @usuario-digital
+# /analog/cells/        @RodSchz @usuario-analogico

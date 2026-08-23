@@ -1,0 +1,45 @@
+name:        XOR2X1
+type:        digital
+category:    row          # row | pad | frame
+function:    "XOR de 2 entradas"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   195.0
+  height_um:  222.5
+  origin:     [0.0, 2.5]
+  sites:      78.0                  # ancho / pitch de 2.5
+  shapes:     150
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [105.0, 12.5]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [102.5, 205.0]}
+  - {name: A, direction: input, layer: "51/1", pos: [17.5, 87.5]}
+  - {name: B, direction: input, layer: "51/1", pos: [80.0, 107.5]}
+  - {name: Out, direction: output, layer: "51/1", pos: [177.5, 87.5]}
+
+site_contract:
+  compliant:  false
+  violations:
+    - "origen en (0.0, 2.5)"
+    - "pozo n llega a y 225.0 (esperado 222.5)"
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/XOR2X1.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

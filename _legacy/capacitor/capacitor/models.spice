@@ -1,0 +1,33 @@
+* ======================================================================
+* Modelo de Capacitor MIM UNIFICADO (Esquemático y Layout)
+* ======================================================================
+* --- 1. Definición del Modelo ---
+************************************************************************
+* Dieléctrico: SiO2
+* Uso: X<nombre> <n1> <n2> MIM_UNIFIED L=<l> W=<w> AREA=<a> PERIM=<p>
+************************************************************************
+.SUBCKT MIM_UNIFIED 1 2 PARAMS: L=1u W=1u AREA=0 PERIM=0
+* --- Parámetros Físicos y Eléctricos
+.PARAM C_area = 8.632650e-05  ; F/m^2 (Capacitancia por área)
+.PARAM C_peri = 1.0e-14      ; F/m (Capacitancia de borde, valor estimado)
+.PARAM R_sheet_T  = 7.000000e-02  ; Ohm/square (Placa Superior)
+.PARAM R_sheet_B  = 1.400000e-01  ; Ohm/square (Placa Inferior)
+.PARAM T_nom = 25
+.PARAM TC1   = 40e-6
+
+* --- Lógica de Selección de Parámetros ---
+* Si AREA > 0 (extraído), úsala. Si no (esquemático), calcúlala a partir de L*W.
+.PARAM effective_area  = 'AREA > 0 ? AREA : L*W'
+.PARAM effective_perim = 'PERIM > 0 ? PERIM : 2*(L+W)'
+* Para ESR, si tenemos L y W, los usamos. Si no, asumimos una forma cuadrada (W/L=1).
+.PARAM esr_ratio       = '(L>0 && W>0) ? W/L : 1'
+
+* --- Cálculo de Capacitancia y ESR
+.PARAM C_base = 'C_area * effective_area + C_peri * effective_perim'
+.PARAM ESR    = '(R_sheet_T + R_sheet_B) * esr_ratio'
+.FUNC C_temp(V, temperatura) {C_base * (1 + TC1*(temperatura - T_nom))}
+
+* --- Topología
+R_esr 1 3 {ESR}
+C1    3 2 'C_temp(V(3,2), TEMPER)'
+.ENDS MIM_UNIFIED

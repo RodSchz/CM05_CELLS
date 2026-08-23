@@ -1,0 +1,41 @@
+# Plantilla de metadatos — celda digital
+# Copiar a digital/cells/<nombre>/cell.yaml y completar.
+
+name:        inv_x1              # debe coincidir con la carpeta y el subcircuito
+type:        digital
+function:    "Inversor"
+drive:       1                    # fuerza relativa
+owner:       ""                   # usuario de GitHub del responsable
+status:      draft                # draft | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+
+geometry:
+  width_um:   0.0                 # múltiplo del pitch
+  height_um:  0.0                 # altura de fila
+  sites:      1                   # ancho en unidades de pitch
+
+pins:
+  - {name: A,   direction: input,  layer: metal1}
+  - {name: Y,   direction: output, layer: metal1}
+  - {name: VDD, direction: power,  layer: metal1}
+  - {name: GND, direction: ground, layer: metal1}
+
+verification:
+  drc:  not_run                   # not_run | clean | violations
+  lvs:  not_run                   # not_run | clean | mismatch
+  site: not_run                   # cumplimiento del contrato geométrico
+
+characterization:
+  corners:  [tt, ff, ss]
+  loads_ff: []                    # capacitancias de carga barridas
+  slews_ns: []                    # tiempos de transición de entrada
+  lib_generated: false
+
+files:
+  schematic: inv_x1.asc
+  layout:    inv_x1.gds
+  netlist:   inv_x1.cdl
+  behavior:  inv_x1.v
+
+notes: ""

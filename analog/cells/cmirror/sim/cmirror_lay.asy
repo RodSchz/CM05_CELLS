@@ -1,0 +1,15 @@
+Version 4
+SymbolType BLOCK
+RECTANGLE Normal 64 32 -32 -48
+WINDOW 0 17 -49 Bottom 2
+SYMATTR Prefix X
+SYMATTR Value cmirror_lay
+PIN -32 -16 LEFT 8
+PINATTR PinName P1
+PINATTR SpiceOrder 1
+PIN 64 -16 RIGHT 8
+PINATTR PinName P2
+PINATTR SpiceOrder 2
+PIN 16 32 BOTTOM 8
+PINATTR PinName COM
+PINATTR SpiceOrder 3

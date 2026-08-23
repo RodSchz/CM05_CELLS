@@ -1,0 +1,40 @@
+* ======================================================================
+* Banco de Pruebas para el Modelo de Capacitor UNIFICADO
+*
+* Este test instancia el capacitor de dos formas:
+* 1. X_schematic: Usa L y W (simulando una netlist de esquemático).
+* 2. X_extracted: Usa AREA y PERIM (simulando una netlist extraída).
+* Si el modelo funciona, ambos resultados deben ser idénticos.
+* ======================================================================
+
+* --- 1. Incluir la librería de modelos ---
+.include models.spice
+
+
+* --- 2. Circuito de Prueba ---
+* --- Instancia 1: Modo Esquemático ---
+Vac_sch in_sch 0 AC 1
+* Capacitor de 50um x 50um, definido por L y W. AREA y PERIM se omiten.
+X_schematic in_sch 0 MIM_UNIFIED L=50u W=50u
+
+* --- Instancia 2: Modo Extraído (Post-Layout) ---
+Vac_ext in_ext 0 AC 1
+* Mismo capacitor de 50um x 50um, pero definido por AREA y PERIM.
+* AREA = (50um * 50um) = 2500 um^2 = 2.5e-9 m^2
+* PERIM = 4 * 50um = 200um = 2e-4 m
+X_extracted in_ext 0 MIM_UNIFIED AREA=2.5e-9 PERIM=2e-4
+
+
+* --- 3. Comando de Simulación ---
+.AC DEC 10 1k 100Meg
+
+
+* --- 4. Control y Graficado ---
+.CONTROL
+  run
+  set xlog
+  * Grafica la impedancia de AMBOS capacitores en la misma ventana.
+  plot mag(v(in_sch)/I(Vac_sch)) mag(v(in_ext)/I(Vac_ext)) title 'Impedancia (Esquemático vs. Extraído)'
+.ENDC
+
+.END

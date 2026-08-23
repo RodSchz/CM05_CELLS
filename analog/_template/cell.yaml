@@ -1,0 +1,45 @@
+# Plantilla de metadatos — celda analógica
+# Copiar a analog/cells/<nombre>/cell.yaml y completar.
+
+name:        ota_5t_1v8
+type:        analog
+function:    "OTA de 5 transistores"
+owner:       ""
+status:      draft                # draft | schematic_ok | drc_clean | lvs_clean | verified | released
+
+process:     CIDESI_CM05
+
+operating_conditions:
+  vdd_v:       0.0
+  temp_c:      [0, 27, 85]
+  corners:     [tt, ff, ss]
+  monte_carlo: false
+
+# Cada spec: objetivo, valor medido y condición de prueba.
+specs:
+  - {name: gain_db,        target: 0.0, measured: null, unit: dB,     tb: sim/ac.asc}
+  - {name: gbw_hz,         target: 0.0, measured: null, unit: Hz,     tb: sim/ac.asc}
+  - {name: phase_margin,   target: 0.0, measured: null, unit: deg,    tb: sim/ac.asc}
+  - {name: input_offset,   target: 0.0, measured: null, unit: mV,     tb: sim/mc.asc}
+  - {name: current_supply, target: 0.0, measured: null, unit: uA,     tb: sim/op.asc}
+  - {name: slew_rate,      target: 0.0, measured: null, unit: V/us,   tb: sim/tran.asc}
+
+matching:
+  critical_pairs: []              # pares que requieren centroide común
+  guard_rings:    false
+  dummies:        false
+
+geometry:
+  width_um:  0.0
+  height_um: 0.0
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+files:
+  schematic: schematic/ota_5t_1v8.asc
+  layout:    layout/ota_5t_1v8.gds
+  design_doc: docs/design.md
+
+notes: ""

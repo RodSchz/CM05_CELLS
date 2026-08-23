@@ -1,0 +1,77 @@
+name:        cmirror
+type:        analog
+function:    "Espejo de corriente NMOS 1:1"
+owner:       "RodSchz"
+status:      drc_clean            # draft | schematic_ok | drc_clean | lvs_clean | verified | released
+
+process:     CIDESI_CM05
+
+topology:
+  description: >
+    Espejo de corriente NMOS básico de dos transistores. M1 en conexión de
+    diodo (compuerta unida al drenaje) fija la tensión de compuerta; M2 copia
+    la corriente hacia P2. Relación nominal 1:1.
+  devices:
+    - {name: M1, model: CIDNMOS, l_um: 10, w_um: 100, role: "diodo de referencia"}
+    - {name: M2, model: CIDNMOS, l_um: 10, w_um: 100, role: "espejo de salida"}
+
+ports:
+  # El orden importa: debe coincidir entre .asy, .asc y el netlist extraído.
+  schematic_order: [COM, P1, P2]    # segun cmirror.asy (SpiceOrder)
+  layout_order:    [P1, P2, COM]    # segun el netlist extraido por KLayout
+  pins:
+    - {name: P1,  direction: input,  description: "entrada de corriente (rama de diodo)"}
+    - {name: P2,  direction: output, description: "salida espejada"}
+    - {name: COM, direction: ground, description: "fuente común"}
+
+operating_conditions:
+  vdd_v:       5.0                 # tension del testbench cmirror_sim.asc
+  temp_c:      [27]                # unico punto simulado hasta ahora
+  corners:     [tt]                # PENDIENTE: falta ff y ss
+  monte_carlo: false
+
+# PENDIENTE: definir objetivos numéricos. Hasta ahora solo se comprobó
+# funcionamiento por barrido DC, sin métricas registradas.
+specs:
+  - {name: ratio,          target: 1.0,  measured: null, unit: A/A,  tb: sim/cmirror_sim.asc}
+  - {name: current_ref,    target: null, measured: null, unit: uA,   tb: sim/cmirror_sim.asc}
+  - {name: output_res,     target: null, measured: null, unit: MOhm, tb: null}
+  - {name: v_min_out,      target: null, measured: null, unit: V,    tb: null}
+  - {name: mismatch_3s,    target: null, measured: null, unit: "%",  tb: null}
+
+matching:
+  critical_pairs: [[M1, M2]]
+  guard_rings:    false            # PENDIENTE verificar en el layout
+  dummies:        false            # PENDIENTE
+  common_centroid: false           # PENDIENTE: recomendable para un espejo
+
+geometry:
+  width_um:  185.0
+  height_um: 160.0
+  source:    "medido sobre cmirror.gds con KLayout"
+
+verification:
+  drc:
+    status: clean                  # reporte con 0 violaciones
+    report: results/CIDESI_CMOS_DRC.lyrdb
+    runset: "CIDESI_CM05/tech/CIDESI_CM05/drc/drc.lydrc"
+  lvs:
+    status: manual_match           # comparación manual de netlists, no LVS formal
+    note: >
+      El netlist extraído (layout/cmirror.cir) coincide topológicamente con el
+      esquemático: M1 en diodo, M2 espejo, ambos CIDNMOS L=10u W=100u. La
+      permuta drenaje/fuente en M1 es normal en extracción. PENDIENTE correr
+      LVS formal en KLayout.
+
+files:
+  schematic:  schematic/cmirror.asc
+  symbol:     schematic/cmirror.asy
+  layout:     layout/cmirror.gds
+  netlist:    layout/cmirror.cir
+  testbench:  sim/cmirror_sim.asc
+  design_doc: docs/design.md
+
+notes: >
+  El GDS original contenía cinco celdas (cmirror, cmirror_lay, prueba,
+  Inverter, AND2X1). Aquí se conserva únicamente la celda cmirror; el archivo
+  completo está en _legacy/espejo_corriente/cmirror_multicelda.gds.

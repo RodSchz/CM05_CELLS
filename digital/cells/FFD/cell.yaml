@@ -1,0 +1,50 @@
+name:        FFD
+type:        digital
+category:    row          # row | pad | frame
+function:    "Flip-flop tipo D"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   582.5
+  height_um:  222.5
+  origin:     [0.0, 0.0]
+  sites:      233.0                  # ancho / pitch de 2.5
+  shapes:     456
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [60.0, 10.0]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [60.0, 202.5]}
+  - {name: C, direction: input, layer: "46/1", pos: [160.0, 20.0]}
+  - {name: CB, direction: input, layer: "46/1", pos: [180.0, 192.5]}
+  - {name: C, direction: input, layer: "49/1", pos: [92.5, 102.5]}   # OJO: C tambien en 46/1 — posible nodo interno
+  - {name: CB, direction: input, layer: "49/1", pos: [50.0, 102.5]}   # OJO: CB tambien en 46/1 — posible nodo interno
+  - {name: Q, direction: input, layer: "49/1", pos: [457.5, 100.0]}
+  - {name: CLB, direction: input, layer: "51/1", pos: [335.0, 77.5]}
+  - {name: CLK, direction: input, layer: "51/1", pos: [17.5, 100.0]}
+  - {name: Data, direction: input, layer: "51/1", pos: [47.5, 25.0]}
+  - {name: PRB, direction: input, layer: "51/1", pos: [527.5, 75.0]}
+  - {name: QB, direction: input, layer: "51/1", pos: [567.5, 97.5]}
+
+site_contract:
+  compliant:  true
+  violations: []
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/FFD.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

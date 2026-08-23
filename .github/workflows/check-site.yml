@@ -1,0 +1,39 @@
+name: Contrato geométrico
+
+# Valida que toda celda digital pueda colocarse en fila y abutar.
+# Solo corre cuando el PR toca la biblioteca digital o el propio contrato.
+on:
+  pull_request:
+    paths:
+      - 'digital/**'
+      - 'scripts/drc/check_site.py'
+  push:
+    branches: [main]
+    paths:
+      - 'digital/**'
+      - 'scripts/drc/check_site.py'
+  workflow_dispatch:
+
+jobs:
+  check-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar KLayout
+        run: pip install --quiet klayout
+
+      - name: Verificar contrato de fila
+        run: |
+          shopt -s nullglob globstar
+          archivos=(digital/cells/**/layout/*.gds digital/cells/**/layout/*.oas)
+          if [ ${#archivos[@]} -eq 0 ]; then
+            echo "No hay celdas digitales con layout todavia — nada que verificar."
+            exit 0
+          fi
+          echo "Revisando ${#archivos[@]} archivo(s) de layout:"
+          python scripts/drc/check_site.py --config digital/site.yaml "${archivos[@]}"

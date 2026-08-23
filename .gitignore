@@ -1,0 +1,35 @@
+# --- LTspice: salidas regenerables ---
+*.raw
+*.op.raw
+*.fft
+*.log
+*.net
+
+# --- KLayout ---
+*.gds.bak
+*.oas.bak
+*.lyrdb.gz
+
+# --- ngspice ---
+*.out
+rawspice.raw
+
+# --- Archivos de bloqueo y autoguardado ---
+*.lck
+#auto_saved_files#
+*~
+*.tmp
+
+# --- Sistema ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+
+# --- Excepcion: _legacy conserva el material historico tal cual,
+#     incluidos archivos que normalmente se ignoran ---
+!_legacy/**

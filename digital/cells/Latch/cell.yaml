@@ -1,0 +1,48 @@
+name:        Latch
+type:        digital
+category:    row          # row | pad | frame
+function:    "Cerrojo transparente"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   362.5
+  height_um:  222.5
+  origin:     [0.0, 0.0]
+  sites:      145.0                  # ancho / pitch de 2.5
+  shapes:     246
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [60.0, 10.0]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [60.0, 202.5]}
+  - {name: G, direction: input, layer: "49/1", pos: [50.0, 110.0]}
+  - {name: GBI, direction: input, layer: "49/1", pos: [92.5, 107.5]}
+  - {name: QB, direction: input, layer: "49/1", pos: [187.5, 97.5]}
+  - {name: CLB, direction: input, layer: "51/1", pos: [347.5, 87.5]}
+  - {name: Data, direction: input, layer: "51/1", pos: [42.5, 105.0]}
+  - {name: GB, direction: input, layer: "51/1", pos: [17.5, 105.0]}
+  - {name: PRB, direction: input, layer: "51/1", pos: [320.0, 22.5]}
+  - {name: Q, direction: input, layer: "51/1", pos: [247.5, 72.5]}
+
+site_contract:
+  compliant:  true
+  violations: []
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/Latch.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

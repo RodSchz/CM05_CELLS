@@ -1,0 +1,44 @@
+name:        FILLER
+type:        digital
+category:    row          # row | pad | frame
+function:    "Celda de relleno"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   35.0
+  height_um:  222.5
+  origin:     [7.5, 0.0]
+  sites:      14.0                  # ancho / pitch de 2.5
+  shapes:     10
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  []                                # la celda no tiene etiquetas de texto
+
+site_contract:
+  compliant:  false
+  violations:
+    - "origen en (7.5, 0.0)"
+    - "riel GND de x 7.5 a 42.5 (esperado 15.0..35.0)"
+    - "riel VDD de x 7.5 a 42.5 (esperado 15.0..35.0)"
+    - "falta etiqueta VDD en 49/1"
+    - "falta etiqueta GND en 49/1"
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/FILLER.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

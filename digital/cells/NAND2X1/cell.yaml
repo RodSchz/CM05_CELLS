@@ -1,0 +1,43 @@
+name:        NAND2X1
+type:        digital
+category:    row          # row | pad | frame
+function:    "NAND de 2 entradas"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   100.0
+  height_um:  222.5
+  origin:     [0.0, 0.0]
+  sites:      40.0                  # ancho / pitch de 2.5
+  shapes:     126
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [52.5, 10.0]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [50.0, 202.5]}
+  - {name: A, direction: input, layer: "51/1", pos: [15.0, 97.5]}
+  - {name: B, direction: input, layer: "51/1", pos: [85.0, 95.0]}
+  - {name: Out, direction: output, layer: "51/1", pos: [50.0, 40.0]}
+
+site_contract:
+  compliant:  true
+  violations: []
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/NAND2X1.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

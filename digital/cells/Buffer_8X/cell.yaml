@@ -1,0 +1,43 @@
+name:        Buffer_8X
+type:        digital
+category:    row          # row | pad | frame
+function:    "Buffer no inversor, fuerza 8X"
+owner:       ""                   # usuario de GitHub responsable
+status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
+
+geometry:
+  width_um:   245.0
+  height_um:  222.5
+  origin:     [0.0, 0.0]
+  sites:      98.0                  # ancho / pitch de 2.5
+  shapes:     156
+
+# Direcciones inferidas del nombre del pin. REVISAR Y CONFIRMAR.
+pins:
+  - {name: GND, direction: ground, layer: "49/1", pos: [67.5, 10.0]}
+  - {name: VDD, direction: power, layer: "49/1", pos: [60.0, 202.5]}
+  - {name: A, direction: input, layer: "51/1", pos: [17.5, 102.5]}
+  - {name: Out, direction: output, layer: "51/1", pos: [227.5, 100.0]}
+
+site_contract:
+  compliant:  false
+  violations:
+    - "riel GND de x 5.0 a 235.0 (esperado 7.5..237.5)"
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+# PENDIENTE: el netlist heredado (prueba.cir) solo declaraba VDD y GND como
+# puertos; las entradas y la salida quedaron como nodos internos. Hay que
+# re-extraer desde KLayout con el etiquetado de pines corregido.
+files:
+  layout:   layout/Buffer_8X.gds
+  netlist:  null                   # pendiente de re-extraccion
+  behavior: null                   # pendiente
+
+notes: ""

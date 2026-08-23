@@ -1,0 +1,32 @@
+* ==========================================================
+* Archivo de Prueba para Capacitor MIM en ngspice
+* ==========================================================
+
+* --- 1. Incluir el modelo del capacitor ---
+.include models.spice
+
+* --- 2. Circuito de Prueba ---
+* Fuente de voltaje de AC para el análisis
+Vac in 0 AC 1
+
+* Instancia del capacitor bajo prueba de 50um x 50um
+Xcap1 in 0 MIM_CAP_SiO2 L=50u W=50u
+
+* --- 3. Comandos de Simulación ---
+* Análisis de Frecuencia (AC) de 1 MHz a 50 GHz
+.AC DEC 20 1Meg 50G
+
+* Barrido de Temperatura
+.STEP TEMP LIST 0 25 100
+
+* --- 4. Control y Graficado ---
+.CONTROL
+  run
+  set xlog
+  * Graficar la parte real de la impedancia (para ver la ESR)
+  plot real(v(in)/I(Vac)) title 'Resistencia Serie (ESR)' ylimit 0.1 0.3
+  * Graficar la magnitud de la impedancia (log-log)
+  plot mag(v(in)/I(Vac)) title 'Magnitud de Impedancia'
+.ENDC
+
+.END

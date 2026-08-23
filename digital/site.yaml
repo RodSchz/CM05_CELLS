@@ -1,0 +1,65 @@
+# Contrato geométrico de la biblioteca digital CIDESI_CM05
+#
+# FUENTE ÚNICA DE VERDAD. La leen scripts/drc/check_site.py y la documentación
+# en docs/site_rules.md. Cambiar un valor aquí obliga a revalidar TODA la
+# biblioteca — no se edita sin decisión explícita del coordinador.
+#
+# Valores derivados por medición sobre CM05_celdas.gds del PDK (v0.8),
+# tomando como referencia las 11 celdas que ya son mutuamente consistentes.
+
+process: CIDESI_CM05
+units_um: true
+
+# --- Fila ---
+row_height:   222.5      # altura de todas las celdas de fila
+site_width:     2.5      # pitch: todo ancho debe ser múltiplo entero
+origin_x:       0.0      # esquina inferior izquierda del bounding box
+origin_y:       0.0
+
+# --- Rieles de alimentación (Metal1, capa 49/0) ---
+# Medidos sobre FILLER, que no tiene más geometría que los rieles.
+gnd_rail_bottom:   5.0
+gnd_rail_top:     15.0
+vdd_rail_bottom: 197.5
+vdd_rail_top:    207.5
+rail_layer:      "49/0"
+
+# Retranqueo horizontal de los rieles respecto a los bordes de la celda.
+# La biblioteca actual usa 7.5 um por lado, de forma consistente en las 16
+# celdas de fila. CONSECUENCIA: al abutar dos celdas queda un hueco de 15 um
+# entre rieles, así que la alimentación NO se conecta por abutment y hay que
+# rutearla explícitamente.
+#
+# Poner 0.0 aquí exige que los rieles lleguen a ambos bordes (abutment
+# automático), pero obliga a redibujar las 16 celdas.
+rail_x_inset:    7.5
+
+# --- Pozo n ---
+# Debe llegar al borde superior para formar banda continua al abutar.
+nwell_layer:     "42/0"
+nwell_top:       222.5
+nwell_bottom_min: 110.0   # tolerancia: el borde inferior varía entre celdas
+nwell_bottom_max: 125.0
+
+# --- Pines ---
+# La biblioteca separa alimentación de señal por capa de texto:
+#   VDD y GND      -> Metal1.text  (49/1)
+#   señales        -> Metal2.text  (51/1)
+# Excepciones detectadas: FFD y Latch tienen además etiquetas en Poly.text
+# (46/1) y señales en Metal1.text que parecen nodos internos, no pines.
+# Revisar antes de correr LVS: un nodo interno etiquetado se confunde con un
+# puerto.
+power_pin_layer:  "49/1"
+signal_pin_layer: "51/1"
+power_pins:      [VDD, GND]
+
+# --- Celdas exentas del contrato de fila ---
+# Pads, padframes y celdas de E/S no se colocan en filas.
+exempt:
+  - PADVDD
+  - PADGND
+  - PADIGI
+  - CORNER
+  - Padframe2x2
+  - Padframe4x4
+  - Outbuffer

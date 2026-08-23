@@ -1,0 +1,34 @@
+# Binarios: sin conversion de finales de linea ni diff textual.
+# NOTA: Git LFS no esta activado todavia. Cuando los GDS crezcan, migrar con
+# `git lfs migrate import --include="*.gds,*.oas"` (reescribe el historial).
+*.gds  binary
+*.GDS  binary
+*.gds2 binary
+*.oas  binary
+*.png  binary
+*.pdf  binary
+*.zip  binary
+*.raw  binary
+
+# Texto: normalizar finales de linea a LF
+*.md       text eol=lf
+*.yaml     text eol=lf
+*.yml      text eol=lf
+*.py       text eol=lf
+*.sh       text eol=lf
+*.v        text eol=lf
+*.cdl      text eol=lf
+*.cir      text eol=lf
+*.spice    text eol=lf
+*.lib      text eol=lf
+*.xs       text eol=lf
+*.lydrc    text eol=lf
+*.lyrdb    text eol=lf
+
+# LTspice guarda con CRLF; respetarlo
+*.asc  text eol=crlf
+*.asy  text eol=crlf
+
+# KLayout
+*.lyp  text
+*.lym  text
