@@ -1,0 +1,58 @@
+* ============================================================================
+* cmirror -- banco de pruebas post-layout (ngspice)
+*
+* Consume el netlist EXTRAIDO por KLayout desde el layout, no el esquematico.
+* Por eso no depende de LTspice ni puede quedar desincronizado con el .asc:
+* verifica el circuito real, con las dimensiones que quedaron dibujadas.
+*
+* Uso:  ./run.sh          (o: ngspice -b cmirror_tb.spice)
+* ============================================================================
+
+.include ../../../../pdk/tech/models/CM05_models.lib
+.include ../layout/cmirror.cir
+
+* Orden de puertos del netlist extraido: P1 (referencia), P2 (salida), COM
+X1 REF OUT COM cmirror
+
+* Referencia comun
+Vcom  COM 0   DC 0
+* Corriente de referencia inyectada en P1
+Iref  0   REF DC 100u
+* Polarizacion de la salida durante el barrido de Iref
+Vout  OUT 0   DC 2.5
+
+.control
+set noaskquit
+
+echo
+echo "=== 1. Relacion del espejo contra corriente de referencia ==="
+dc Iref 1u 200u 1u
+let iout = -vout#branch
+meas dc io_10u  FIND iout   AT=10u
+meas dc io_50u  FIND iout   AT=50u
+meas dc io_100u FIND iout   AT=100u
+meas dc io_190u FIND iout   AT=190u
+meas dc v_ref   FIND v(ref) AT=100u
+let ratio_10u  = io_10u  / 10e-6
+let ratio_50u  = io_50u  / 50e-6
+let ratio_100u = io_100u / 100e-6
+let ratio_190u = io_190u / 190e-6
+print ratio_10u ratio_50u ratio_100u ratio_190u
+
+echo
+echo "=== 2. Resistencia de salida y tension minima de salida ==="
+reset
+alter @Iref[dc] = 100u
+dc Vout 0 5 0.005
+let io   = -vout#branch
+let rout = 1/deriv(io)
+meas dc i_sat FIND io   AT=4
+meas dc r_out FIND rout AT=4
+meas dc v_min WHEN io=99.5u RISE=1
+
+echo
+echo "=== 3. Datos crudos para graficar ==="
+wrdata ../results/cmirror_vout_sweep.csv io
+
+.endc
+.end

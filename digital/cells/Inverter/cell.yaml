@@ -3,7 +3,7 @@ type:        digital
 category:    row          # row | pad | frame
 function:    "Inversor"
 owner:       ""                   # usuario de GitHub responsable
-status:      migrated             # migrated | drc_clean | lvs_clean | characterized | released
+status:      wip                  # wip | migrated | drc_clean | lvs_clean | characterized | released
 
 process:     CIDESI_CM05
 origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
@@ -35,8 +35,40 @@ verification:
 # puertos; las entradas y la salida quedaron como nodos internos. Hay que
 # re-extraer desde KLayout con el etiquetado de pines corregido.
 files:
+  ltspice:
+    schematic: ltspice/NOT.asc
+    symbol:    ltspice/NOT.asy
   layout:   layout/Inverter.gds
   netlist:  null                   # pendiente de re-extraccion
   behavior: null                   # pendiente
 
 notes: ""
+
+# ---------------------------------------------------------------------------
+# Bloqueos abiertos. Mientras esta lista no este vacia, la celda no puede
+# pasar a status: released.
+# ---------------------------------------------------------------------------
+blockers:
+  - id: pines-alimentacion
+    severity: media
+    summary: >
+      El esquematico nombra la alimentacion V+ / V- y el layout extraido usa
+      VDD / GND. Deben coincidir para que el LVS empareje los puertos.
+    owner: ""
+    issue: null
+  - id: netlist-sin-puertos
+    severity: alta
+    summary: >
+      El netlist heredado solo declaraba VDD y GND como puertos; las entradas y
+      la salida quedaron como nodos internos. Falta re-extraer desde KLayout con
+      el etiquetado de pines corregido.
+    owner: ""
+    issue: null
+  - id: nombre-inconsistente
+    severity: media
+    summary: >
+      La celda del layout se llama Inverter y el esquematico NOT.asc / NOT.asy.
+      Hay que unificar: el nombre viaja del esquematico al netlist y al LVS.
+      No se renombro aqui porque NOT_CHAIN instancia el simbolo NOT.
+    owner: ""
+    issue: null

@@ -1,0 +1,39 @@
+name:        NOT_CHAIN
+type:        block
+function:    "Cadena de inversores para medir retardo de propagacion"
+owner:       ""                   # usuario de GitHub responsable
+status:      wip                  # wip | migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "compuertas.rar, material previo del grupo"
+
+instancia:
+  - NOT
+  - Buffer
+
+files:
+  ltspice:
+    schematic: ltspice/NOT_CHAIN.asc
+  layout:   null                   # este bloque no tiene layout
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+notes: ""
+
+# ---------------------------------------------------------------------------
+# Bloqueos abiertos. Mientras esta lista no este vacia, el bloque no puede
+# pasar a status: released.
+# ---------------------------------------------------------------------------
+blockers:
+  - id: requiere-netlists-liberados
+    severity: alta
+    summary: >
+      Instancia simbolos de celdas que viven en digital/cells/. Segun la regla
+      del repositorio (jerarquia dentro de una unidad de trabajo, netlist en las
+      fronteras de liberacion), este bloque debe consumir los .subckt exportados
+      de esas celdas mediante .inc. Mientras no existan, el esquematico NO abre
+      correctamente en LTspice: no encuentra los simbolos.
+    owner: ""
+    issue: null

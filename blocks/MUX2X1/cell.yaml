@@ -1,0 +1,32 @@
+name:        MUX2X1
+type:        block
+function:    "Multiplexor 2 a 1"
+owner:       ""                   # usuario de GitHub responsable
+status:      wip                  # wip | migrated | drc_clean | lvs_clean | characterized | released
+
+process:     CIDESI_CM05
+origen:      "compuertas.rar, material previo del grupo"
+
+files:
+  ltspice:
+    schematic: ltspice/MUX2X1.asc
+  layout:   null                   # este bloque no tiene layout
+
+verification:
+  drc: not_run
+  lvs: not_run
+
+notes: ""
+
+# ---------------------------------------------------------------------------
+# Bloqueos abiertos. Mientras esta lista no este vacia, el bloque no puede
+# pasar a status: released.
+# ---------------------------------------------------------------------------
+blockers:
+  - id: esquematico-incompleto
+    severity: alta
+    summary: >
+      El esquematico tiene cables y etiquetas (A, B, S, Y) pero NINGUN
+      componente colocado. Se conserva a proposito como version en trabajo.
+    owner: ""
+    issue: null

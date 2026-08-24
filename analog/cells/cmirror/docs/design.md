@@ -74,29 +74,78 @@ variante intencional. La celda `cmirror` que se conserva aquí **sí** tiene los
 dos transistores a `L = 10 µm`, así que el problema está acotado a
 `cmirror_lay`.
 
-## Testbench
+## Dos entornos de simulación
 
-`sim/cmirror_sim.asc` instancia en paralelo la versión de esquemático (`X1`) y
+La celda se verifica en dos etapas distintas, no dos veces lo mismo:
+
+| Carpeta | Parte de | Qué representa |
+|---|---|---|
+| `ltspice/` | El esquemático dibujado | El circuito ideal, pre-layout |
+| `ngspice/` | El netlist extraído por KLayout | El circuito real, tal como quedó dibujado |
+
+El testbench de ngspice no lee el `.asc`, así que no puede quedar
+desincronizado con él. La diferencia entre ambos resultados es el dato de
+interés: cuánto se aparta el dibujo del ideal.
+
+## Resultados medidos (ngspice, netlist extraído)
+
+Corner `tt`, 27 °C, sobre `layout/cmirror.cir`:
+
+| Medición | Valor |
+|---|---|
+| Relación @ 10 µA | 1.0101 |
+| Relación @ 50 µA | 1.0032 |
+| Relación @ 100 µA | 1.0016 |
+| Relación @ 190 µA | 1.0006 |
+| V_GS @ 100 µA | 1.6685 V |
+| r_out @ V_out = 4 V | 5.12 MΩ |
+| V_min de salida | 0.836 V |
+
+**El espejo funciona**, con un error por exceso de entre 0.06 % y 1 % según la
+corriente. La relación baja al subir la corriente, y eso tiene una explicación
+física clara: modulación de longitud de canal. M1, en conexión de diodo,
+mantiene su drenaje en V_GS = 1.67 V; M2 lo tiene en 2.5 V. Esa diferencia de
+V_DS hace que M2 conduzca un poco más, y el efecto pesa proporcionalmente más
+cuando la corriente es baja.
+
+Para reducirlo, el camino conocido es un espejo cascodo — a costa de subir la
+tensión mínima de salida, que hoy es 0.836 V y define el límite inferior del
+rango útil.
+
+**Nota importante:** estos números son del netlist de LVS, sin parásitos. Con
+`W = 100 µm` en un proceso de 5 µm, extraer con `PEX.lylvs` probablemente los
+mueva. Falta hacerlo.
+
+## Testbench de LTspice
+
+`ltspice/cmirror_sim.asc` instancia en paralelo la versión de esquemático (`X1`) y
 la extraída del layout (`U1`), las excita con fuentes de corriente controladas
 (`G1`, `G2`, ganancia 1) manejadas por `V2`, y hace un barrido DC de 0 a 5 mV
 en pasos de 0.1 mV, con `V1 = 5 V` de alimentación.
 
-### Problema de portabilidad
+### Portabilidad: corregido
 
-El testbench incluye rutas absolutas del equipo del autor:
-
-```
-.inc C:\Users\Lenovo\KLayout\salt\CIDESI_CM05\tech\CIDESI_CM05\models\CM05_models.lib
-.inc C:\Users\Lenovo\OneDrive\Documentos\Espejo_corriente\cmirror_lay.cir
-```
-
-En cuanto otro diseñador clone el repositorio, la simulación falla. Hay que
-sustituirlas por rutas relativas y traer los modelos a `pdk/tech/models/`:
+El testbench traía rutas absolutas al equipo del autor (`C:\Users\Lenovo\...`),
+que rompían la simulación en cuanto otra persona clonara el repositorio. Ya
+están sustituidas por rutas relativas:
 
 ```
 .inc ../../../../pdk/tech/models/CM05_models.lib
 .inc cmirror_lay.cir
 ```
+
+Y todos los archivos de LTspice de la celda viven en una sola carpeta
+(`ltspice/`), porque LTspice resuelve los símbolos jerárquicos relativos al
+esquemático que los instancia y no se lleva bien con jerarquías de carpetas
+profundas. Separar `schematic/` de `sim/` rompía el símbolo de `cmirror`.
+
+### Limitación del testbench
+
+Las salidas de X1 (esquemático) y U1 (layout) están conectadas al mismo nodo
+`OUT`, que va a `V1 = 5 V`. Así que `I(V1)` es la suma de ambas corrientes y no
+permite compararlas directamente. Se puede rescatar con las corrientes de
+puerto de subcircuito (`Ix(x1:P2)`, `Ix(u1:P2)`), o simplemente usar el
+testbench de ngspice, que ya mide la rama extraída por separado.
 
 ## Consideraciones de layout
 
