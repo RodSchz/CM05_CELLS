@@ -25,19 +25,36 @@ ports:
     - {name: COM, direction: ground, description: "fuente común"}
 
 operating_conditions:
-  vdd_v:       5.0                 # tension del testbench cmirror_sim.asc
-  temp_c:      [27]                # unico punto simulado hasta ahora
-  corners:     [tt]                # PENDIENTE: falta ff y ss
-  monte_carlo: false
+  vdd_v:       5.0
+  temp_c:      [27]                # unico punto simulado
+  corners:     [tt]                # PENDIENTE: el PDK no define ff ni ss
+  monte_carlo: false               # PENDIENTE: los modelos no traen dispersión
 
-# PENDIENTE: definir objetivos numéricos. Hasta ahora solo se comprobó
-# funcionamiento por barrido DC, sin métricas registradas.
+# ---------------------------------------------------------------------------
+# Especificaciones
+#
+# Cada medición declara CON QUÉ se obtuvo y EN QUÉ ETAPA:
+#   sim:   ltspice | ngspice
+#   stage: schematic (pre-layout, ideal) | extracted (post-LVS) | pex (con parásitos)
+#
+# Los objetivos siguen sin fijarse: esta celda se dibujó antes de existir un
+# criterio de aceptación. Definirlos es trabajo pendiente.
+# ---------------------------------------------------------------------------
 specs:
-  - {name: ratio,          target: 1.0,  measured: null, unit: A/A,  tb: sim/cmirror_sim.asc}
-  - {name: current_ref,    target: null, measured: null, unit: uA,   tb: sim/cmirror_sim.asc}
-  - {name: output_res,     target: null, measured: null, unit: MOhm, tb: null}
-  - {name: v_min_out,      target: null, measured: null, unit: V,    tb: null}
-  - {name: mismatch_3s,    target: null, measured: null, unit: "%",  tb: null}
+  - {name: ratio_10uA,   target: null, measured: 1.0101,   unit: A/A,   sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: ratio_50uA,   target: null, measured: 1.0032,   unit: A/A,   sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: ratio_100uA,  target: null, measured: 1.0016,   unit: A/A,   sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: ratio_190uA,  target: null, measured: 1.0006,   unit: A/A,   sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: vgs_100uA,    target: null, measured: 1.6685,   unit: V,     sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: iout_vout4V,  target: null, measured: 100.45,   unit: uA,    sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: r_out,        target: null, measured: 5.12,     unit: MOhm,  sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: v_min_out,    target: null, measured: 0.836,    unit: V,     sim: ngspice, stage: extracted, tb: ngspice/cmirror_tb.spice}
+  - {name: mismatch_3s,  target: null, measured: null,     unit: "%",   sim: null,    stage: null,      tb: null}
+
+# La relación queda por encima de 1 y baja al subir la corriente: modulación de
+# longitud de canal. M1 en diodo mantiene su drenaje en V_GS = 1.67 V mientras
+# M2 lo tiene en 2.5 V, y esa diferencia de V_DS hace que M2 conduzca un poco
+# más. Ver ngspice/README.md.
 
 matching:
   critical_pairs: [[M1, M2]]
@@ -52,7 +69,7 @@ geometry:
 
 verification:
   drc:
-    status: clean                  # reporte con 0 violaciones
+    status: clean
     report: results/CIDESI_CMOS_DRC.lyrdb
     runset: "CIDESI_CM05/tech/CIDESI_CM05/drc/drc.lydrc"
   lvs:
@@ -63,13 +80,25 @@ verification:
       permuta drenaje/fuente en M1 es normal en extracción. PENDIENTE correr
       LVS formal en KLayout.
 
+# ---------------------------------------------------------------------------
+# Dos entornos, dos etapas — no son copias uno del otro.
+#   ltspice/  parte del esquemático dibujado (pre-layout, ideal)
+#   ngspice/  parte del netlist extraído del layout (post-layout, real)
+# La diferencia entre ambos es el dato, no un problema a resolver.
+# ---------------------------------------------------------------------------
 files:
-  schematic:  schematic/cmirror.asc
-  symbol:     schematic/cmirror.asy
-  layout:     layout/cmirror.gds
-  netlist:    layout/cmirror.cir
-  testbench:  sim/cmirror_sim.asc
-  design_doc: docs/design.md
+  ltspice:
+    schematic:  ltspice/cmirror.asc
+    symbol:     ltspice/cmirror.asy
+    testbench:  ltspice/cmirror_sim.asc
+  ngspice:
+    testbench:  ngspice/cmirror_tb.spice
+    runner:     ngspice/run.sh
+    log:        results/cmirror_ngspice.log
+  layout:
+    gds:        layout/cmirror.gds
+    netlist:    layout/cmirror.cir
+  design_doc:   docs/design.md
 
 notes: >
   El GDS original contenía cinco celdas (cmirror, cmirror_lay, prueba,
