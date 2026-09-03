@@ -21,6 +21,7 @@ verificación DRC/LVS.
 ## Estado
 
 Repositorio en configuración inicial. Ver `CONTRIBUTING.md` antes de contribuir.
+Repositorio en operación desde agosto de 2026.
 
 ## Contacto
 
