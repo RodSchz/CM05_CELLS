@@ -3,15 +3,15 @@ type:        digital
 category:    row          # row | pad | frame
 function:    "AND de 2 entradas"
 owner:       ""                   # usuario de GitHub responsable
-status:      wip                  # wip | migrated | drc_clean | lvs_clean | characterized | released
+status:      drc_clean                  # wip | migrated | drc_clean | lvs_clean | characterized | released
 
 process:     CIDESI_CM05
 origen:      "CM05_celdas.gds del PDK CIDESI_CM05 v0.8"
 
 geometry:
   width_um:   167.5
-  height_um:  225.0
-  origin:     [0.0, -2.5]
+  height_um:  222.5
+  origin:     [0.0, 0.0]
   sites:      67.0                  # ancho / pitch de 2.5
   shapes:     105
 
@@ -24,10 +24,8 @@ pins:
   - {name: Out, direction: output, layer: "51/1", pos: [147.5, 85.0]}
 
 site_contract:
-  compliant:  false
-  violations:
-    - "origen en (0.0, -2.5)"
-    - "altura 225.0 (esperada 222.5)"
+  compliant:  true
+  violations: []
   checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
 
 verification:
@@ -42,36 +40,13 @@ files:
     schematic: ltspice/AND2X1.asc
     symbol:    ltspice/AND2X1.asy
   layout:   layout/AND2X1.gds
-  netlist:  null                   # pendiente de re-extraccion
+  netlist:  layout/AND2X1.cir
   behavior: null                   # pendiente
 
-notes: ""
+notes: "Frontera chip fue corregida. La causa fue el box Die_outline que no tenia la posición correcta. Esquematico y símbolo corregido. Extracción de netlist"
 
 # ---------------------------------------------------------------------------
 # Bloqueos abiertos. Mientras esta lista no este vacia, la celda no puede
 # pasar a status: released.
 # ---------------------------------------------------------------------------
-blockers:
-  - id: pines-alimentacion
-    severity: media
-    summary: >
-      El esquematico nombra la alimentacion V+ / V- y el layout extraido usa
-      VDD / GND. Deben coincidir para que el LVS empareje los puertos.
-    owner: ""
-    issue: null
-  - id: netlist-sin-puertos
-    severity: alta
-    summary: >
-      El netlist heredado solo declaraba VDD y GND como puertos; las entradas y
-      la salida quedaron como nodos internos. Falta re-extraer desde KLayout con
-      el etiquetado de pines corregido.
-    owner: ""
-    issue: null
-  - id: dimensiones-discrepantes
-    severity: alta
-    summary: >
-      El esquematico usa PMOS w=25u / NMOS w=10u; el layout usa W=50U / W=15U.
-      LA VERSION CORRECTA ES LA DEL LAYOUT. Falta actualizar el esquematico.
-      Se deja marcado a proposito: la correccion la hace el grupo de trabajo.
-    owner: ""
-    issue: null
+blockers: []
