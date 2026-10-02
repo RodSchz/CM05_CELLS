@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <report-database>
  <description>CIDESI_CMOS DRC runset</description>
- <original-file>C:\Users\Alexa\#Residencia_Dig\CM05_CELLS\digital\cells\NAND3X1\Layout\NAND3X1.gds</original-file>
+ <original-file>C:\Users\Alexa\CIDESI\CM05_CELLS\digital\cells\NAND3X1\layout\NAND3X1.gds</original-file>
  <generator>drc: script='C:/Users/Alexa/KLayout/salt/CIDESI_CM05/tech/CIDESI_CM05/drc\\drc.lydrc'</generator>
  <top-cell>NAND3X1</top-cell>
  <tags>
