@@ -1,0 +1,18 @@
+*
+XX1 A B C VDD OUT VSS NOR3X1
+
+* block symbol definitions
+.subckt NOR3X1 A B C VDD OUT VSS
+MP1 VDD A n1 VDD CIDPMOS l=5u w=37.5u
+MP2 n1 B n2 VDD CIDPMOS l=5u w=37.5u
+MP3 n2 C OUT VDD CIDPMOS l=5u w=37.5u
+MN1 OUT A VSS VSS CIDNMOS l=5u w=10u
+MN2 OUT B VSS VSS CIDNMOS l=5u w=10u
+MN3 OUT C VSS VSS CIDNMOS l=5u w=10u
+.ends NOR3X1
+
+.model NMOS NMOS
+.model PMOS PMOS
+.lib C:\Users\Alexa\AppData\Local\LTspice\lib\cmp\standard.mos
+.backanno
+.end
