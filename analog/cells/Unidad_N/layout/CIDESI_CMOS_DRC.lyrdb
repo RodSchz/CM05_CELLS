@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <report-database>
  <description>CIDESI_CMOS DRC runset</description>
- <original-file>C:/Users/esmer/CIDESI/CM05_CELLS/analog/cells/Unidad_N/layout/Unidad_N.gds</original-file>
+ <original-file>C:\Users\esmer\CIDESI\CM05_CELLS\analog\cells\Unidad_N\layout\Unidad_N.gds</original-file>
  <generator>drc: script='C:/Users/esmer/KLayout/salt/CIDESI_CM05/tech/CIDESI_CM05/drc\\drc.lydrc'</generator>
  <top-cell>Unidad_N</top-cell>
  <tags>

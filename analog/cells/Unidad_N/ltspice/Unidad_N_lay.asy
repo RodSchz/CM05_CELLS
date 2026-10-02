@@ -1,0 +1,15 @@
+Version 4
+SymbolType BLOCK
+RECTANGLE Normal -32 -56 48 56
+WINDOW 0 8 -56 Bottom 2
+SYMATTR Prefix X
+SYMATTR Value Unidad_N
+PIN 48 -32 RIGHT 8
+PINATTR PinName D
+PINATTR SpiceOrder 1
+PIN 48 0 RIGHT 8
+PINATTR PinName G
+PINATTR SpiceOrder 2
+PIN 48 32 RIGHT 8
+PINATTR PinName COM
+PINATTR SpiceOrder 3
