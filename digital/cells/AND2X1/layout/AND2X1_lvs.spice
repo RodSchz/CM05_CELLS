@@ -1,0 +1,19 @@
+* NGSPICE file created from AND2X1.ext - technology: scmos
+
+.global Vdd Gnd 
+
+.subckt AND2X1
+M1000 Out a_9000_11000# GND Gnd nfet w=15u l=5u
++  ad=0.1875n pd=55u as=0.1875n ps=55u
+M1001 Out a_9000_11000# VDD VDD pfet w=50u l=5u
++  ad=0.625n pd=0.125m as=0.625n ps=0.125m
+M1002 a_12500_11000# A a_9000_11000# Gnd nfet w=15u l=5u
++  ad=56.25p pd=22.5u as=0.1875n ps=55u
+M1003 GND B a_12500_11000# Gnd nfet w=15u l=5u
++  ad=0.1875n pd=55u as=56.25p ps=22.5u
+M1004 VDD B a_9000_11000# VDD pfet w=50u l=5u
++  ad=0.625n pd=0.125m as=0.375n ps=65u
+M1005 a_9000_11000# A VDD VDD pfet w=50u l=5u
++  ad=0.375n pd=65u as=0.625n ps=0.125m
+.ends
+

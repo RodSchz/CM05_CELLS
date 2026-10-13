@@ -1,0 +1,19 @@
+* NGSPICE file created from NAND3X1.ext - technology: scmos
+
+.global Vdd Gnd 
+
+.subckt NAND3X1
+M1000 a_7000_6000# A Out Gnd nfet w=30u l=5u
++  ad=0.225n pd=45u as=0.45n ps=90u
+M1001 GND C a_11000_6000# Gnd nfet w=30u l=5u
++  ad=0.45n pd=90u as=0.225n ps=45u
+M1002 a_11000_6000# B a_7000_6000# Gnd nfet w=30u l=5u
++  ad=0.225n pd=45u as=0.225n ps=45u
+M1003 Out A VDD VDD pfet w=50u l=5u
++  ad=0.375n pd=65u as=0.75n ps=0.13m
+M1004 Out C VDD VDD pfet w=50u l=5u
++  ad=0.75n pd=0.13m as=0.375n ps=65u
+M1005 VDD B Out VDD pfet w=50u l=5u
++  ad=0.375n pd=65u as=0.375n ps=65u
+.ends
+

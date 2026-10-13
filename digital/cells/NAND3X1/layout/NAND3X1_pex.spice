@@ -1,0 +1,46 @@
+* SPICE3 file created from NAND3X1.ext - technology: scmos
+
+.global Vdd Gnd 
+
+.subckt NAND3X1 A B C VDD Out GND
+M1000 a_7000_6000.t0 A Out.t0 GND nfet w=30u l=5u
++  ad=0.225n pd=45u as=0.45n ps=90u
+M1001 GND.t0 C a_11000_6000.t1 GND nfet w=30u l=5u
++  ad=0.45n pd=90u as=0.225n ps=45u
+M1002 a_11000_6000.t0 B a_7000_6000.t1 GND nfet w=30u l=5u
++  ad=0.225n pd=45u as=0.225n ps=45u
+M1003 Out A VDD VDD.t0 pfet w=50u l=5u
++  ad=0.375n pd=65u as=0.75n ps=0.13m
+M1004 Out C VDD VDD.t3 pfet w=50u l=5u
++  ad=0.75n pd=0.13m as=0.375n ps=65u
+M1005 VDD B Out VDD pfet w=50u l=5u
++  ad=0.375n pd=65u as=0.375n ps=65u
+R0 a_11000_6000.t0 a_11000_6000.t1 2.3505
+R1 a_7000_6000.t0 a_7000_6000.t1 2.3505
+R2 Out Out.t0 1.58316
+R3 VDD VDD.t3 31.8032
+R4 VDD VDD.t0 31.744
+R5 GND GND.t0 1.33321
+C0 B VDD 23.1432f
+C1 B C 0.9042f
+C2 C VDD 31.7199f
+C3 Out A 0.09509f
+C4 B A 0.08753f
+C5 Out B 42.5121f
+C6 VDD A 2.23067f
+C7 Out VDD 2.72649f
+C8 Out C 28.2926f
+C9 Out GND 73.04314f
+C10 C GND 24.3866f
+C11 B GND 13.788f
+C12 A GND 3.52896f
+C13 VDD GND 56.01394f
+C14 VDD.t0 GND 2.48331f
+C15 VDD.t3 GND 2.51143f
+C16 Out.t0 GND 3.70946f
+C17 a_7000_6000.t1 GND 0
+C18 a_7000_6000.t0 GND 0
+C19 a_11000_6000.t1 GND 0
+C20 a_11000_6000.t0 GND 0
+.ends
+
