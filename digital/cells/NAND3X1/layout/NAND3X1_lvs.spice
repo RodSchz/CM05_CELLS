@@ -2,7 +2,7 @@
 
 .global Vdd Gnd 
 
-.subckt NAND3X1
+.subckt NAND3X1 A B C Out GND VDD
 M1000 a_7000_6000# A Out Gnd nfet w=30u l=5u
 +  ad=0.225n pd=45u as=0.45n ps=90u
 M1001 GND C a_11000_6000# Gnd nfet w=30u l=5u
