@@ -14,7 +14,7 @@ verificación DRC/LVS.
 | `digital/` | Celdas estándar: contrato geométrico fijo, caracterización en lote |
 | `analog/` | Celdas analógicas: regidas por especificaciones, verificación por testbench |
 | `blocks/` | Bloques mixtos que componen celdas de ambas bibliotecas |
-| `scripts/` | DRC, LVS, caracterización digital y verificación analógica |
+| `scripts/` | Verificación geométrica, funcional y por especificación, y caracterización digital |
 | `docs/` | Convenciones, guías y documentación general |
 | `_legacy/` | Material previo a la reorganización, sin clasificar |
 
