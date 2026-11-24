@@ -10,8 +10,8 @@
 
 * ---------------- 2) Niveles CMOS 5 V (editables) --------------------
 .param VDDV    = 5
-.param VILV    = 1.5               $ PEOR CASO "0"
-.param VIHV    = 3.5               $ PEOR CASO "1"
+.param VILV    = 1.2               $ PEOR CASO "0"  (ver docs/niveles_logicos.md)
+.param VIHV    = 3.3               $ PEOR CASO "1"  (VDD-|VTOp|=3.22)
 
 VDD  vdd 0 DC {VDDV}
 VA   a   0 DC 0
@@ -25,8 +25,8 @@ XDUT vdd 0 a y en MI_CELDA_M
 .control
   * ------------- Parametros del diagnostico (editables) --------------
   let vdd_n   = 5.0
-  let vil     = 1.5                   $ Deben coincidir con los .param
-  let vih     = 3.5
+  let vil     = 1.2                   $ Deben coincidir con los .param
+  let vih     = 3.3
   let voh_min = 4.44                 $ Salida "1" valida si V >= VOH_min
   let vol_max = 0.5                  $ Salida "0" valida si V <= VOL_max
   let iload   = 20e-6              $ Carga de prueba en estado activo [A]
