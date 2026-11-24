@@ -21,8 +21,8 @@
 * ---------------- 2) Niveles CMOS 5 V (editables) --------------------
 * Referencia: niveles JEDEC/CMOS 5 V usuales (VIL = 0.3 VDD, VIH = 0.7 VDD)
 .param VDDV    = 5
-.param VILV    = 1.5               $ max. voltaje aceptado como "0" a la entrada
-.param VIHV    = 3.5               $ min. voltaje aceptado como "1" a la entrada
+.param VILV    = 1.2               $ max. voltaje aceptado como "0" a la entrada  (ver docs/niveles_logicos.md)
+.param VIHV    = 3.3               $ min. voltaje aceptado como "1" a la entrada  (VDD-|VTOp|=3.22)
 
 VDD  vdd 0 DC {VDDV}
 VA   a   0 DC 0
@@ -36,8 +36,8 @@ XDUT a b c vdd 0 MI_CELDA
 .control
   * ------------- Parametros del diagnostico (editables) --------------
   let vdd_n  = 5.0
-  let vil    = 1.5                   $ deben coincidir con los .param
-  let vih    = 3.5
+  let vil    = 1.2                   $ deben coincidir con los .param
+  let vih    = 3.3
   let voh_min = 4.44                 $ salida "1" valida si V >= VOH_min
   let vol_max = 0.5                  $ salida "0" valida si V <= VOL_max
   let iload  = 20e-6                 $ |IOH| = |IOL| de prueba [A] (0 = sin carga)
