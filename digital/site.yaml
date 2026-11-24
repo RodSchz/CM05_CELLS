@@ -1,11 +1,33 @@
 # Contrato geométrico de la biblioteca digital CIDESI_CM05
 #
 # FUENTE ÚNICA DE VERDAD. La leen scripts/drc/check_site.py y la documentación
-# en docs/site_rules.md. Cambiar un valor aquí obliga a revalidar TODA la
-# biblioteca — no se edita sin decisión explícita del coordinador.
+# en digital/docs/site_rules.md. Cambiar un valor aquí obliga a revalidar TODA
+# la biblioteca — no se edita sin decisión explícita del coordinador.
 #
-# Valores derivados por medición sobre CM05_celdas.gds del PDK (v0.8),
-# tomando como referencia las 11 celdas que ya son mutuamente consistentes.
+# ---------------------------------------------------------------------------
+# REV. 2 — abutment horizontal, estilo osu05
+# ---------------------------------------------------------------------------
+# La rev. 1 declaraba rieles retranqueados 7.5 um por lado. Consecuencia: al
+# abutar dos celdas quedaban 15 um de hueco entre rieles y la alimentación no
+# se conectaba por abutment. Esta revisión pone el retranqueo en 0.0: el riel
+# llega exacto a los dos bordes, abuta con el de la vecina y se fusiona.
+#
+# Medido sobre un diseño real hecho con celdas osu05 escaladas a CM05, su
+# convención es la misma salvo que allá el riel SOBRESALE 5 um por lado
+# (traslape de 10 um). Aquí el retranqueo es 0.0 (toque exacto) a propósito:
+# la holgura de Metal1 de señal al borde es de 7.5 um = 3*lambda en las 16
+# celdas, así que un sobresalto de 5 um dejaría el riel de la vecina a 2.5 um
+# de una señal y violaría el espaciado mínimo de Metal1.
+#
+# Lo que esta revisión NO adopta de osu05: que el eje del riel coincida con el
+# límite de fila para que dos filas espejeadas compartan riel. Las celdas de
+# esta biblioteca llevan stubs de pin en Metal2 asomando por los bordes
+# superior e inferior (15 de 17 celdas, 15 x 10 um), que es la convención
+# correcta para un proceso de DOS metales con ruteo por canal: las filas no se
+# pegan verticalmente, entre ellas va el canal de ruteo y los rieles de cada
+# fila se alimentan de una espina vertical. Compartir riel entre filas
+# espejeadas haría chocar esos stubs. Si algún día hay un tercer metal, esa
+# parte de la convención se puede reconsiderar.
 
 process: CIDESI_CM05
 units_um: true
@@ -13,11 +35,19 @@ units_um: true
 # --- Fila ---
 row_height:   222.5      # altura de todas las celdas de fila
 site_width:     2.5      # pitch: todo ancho debe ser múltiplo entero
-origin_x:       0.0      # esquina inferior izquierda del bounding box
-origin_y:       0.0
+origin_x:       0.0      # borde izquierdo del límite lógico
+origin_y:       0.0      # borde inferior del límite lógico
+
+# --- Límite lógico de la celda ---
+# Capa de boundary, ya presente en las 17 celdas. Es ella, y no el bounding
+# box, la que define el ancho y la altura: el bbox se puede inflar con una
+# etiqueta o una figura mal puesta y el contrato dejaría de detectarlo.
+# Nada puede quedar fuera de este rectángulo (ver overhang_*).
+boundary_layer: "100/0"
 
 # --- Rieles de alimentación (Metal1, capa 49/0) ---
 # Medidos sobre FILLER, que no tiene más geometría que los rieles.
+# Centros: GND en y = 10.0, VDD en y = 202.5.
 gnd_rail_bottom:   5.0
 gnd_rail_top:     15.0
 vdd_rail_bottom: 197.5
@@ -25,21 +55,37 @@ vdd_rail_top:    207.5
 rail_layer:      "49/0"
 
 # Retranqueo horizontal de los rieles respecto a los bordes de la celda.
-# La biblioteca actual usa 7.5 um por lado, de forma consistente en las 16
-# celdas de fila. CONSECUENCIA: al abutar dos celdas queda un hueco de 15 um
-# entre rieles, así que la alimentación NO se conecta por abutment y hay que
-# rutearla explícitamente.
-#
-# Poner 0.0 aquí exige que los rieles lleguen a ambos bordes (abutment
-# automático), pero obliga a redibujar las 16 celdas.
-rail_x_inset:    7.5
+# 0.0 = el riel llega a los dos bordes y la alimentación se conecta por
+# abutment. El riel debe cubrir la banda COMPLETA de borde a borde, sin
+# muescas: check_site.py lo verifica por sustracción, no por bounding box.
+rail_x_inset:    0.0
 
 # --- Pozo n ---
-# Debe llegar al borde superior para formar banda continua al abutar.
+# En X debe llegar a los dos bordes y además alguna figura del pozo tiene que
+# cruzar la celda de lado a lado, para formar banda continua al abutar. Este
+# era el defecto de FILLER en la rev. 1: su pozo estaba metido 2.5 um por lado
+# y partía la banda, y el contrato anterior no lo detectaba.
 nwell_layer:     "42/0"
-nwell_top:       222.5
+nwell_x_inset:    0.0
+nwell_top:       222.5    # debe llegar al borde superior
 nwell_bottom_min: 110.0   # tolerancia: el borde inferior varía entre celdas
 nwell_bottom_max: 125.0
+
+# --- Envolvente ---
+# Margen que se tolera fuera del límite lógico, por lado. Cero en los cuatro:
+# un sobresalto lateral choca con la celda vecina y uno vertical se mete en el
+# canal de ruteo.
+overhang_x:        0.0
+overhang_y_bottom: 0.0
+overhang_y_top:    0.0
+
+# --- Holgura al borde lateral ---
+# Toda figura de estas capas que NO sea el riel debe quedar a esta distancia
+# de los bordes izquierdo y derecho. Es el espaciado mínimo de Metal1 del
+# proceso (3*lambda = 7.5 um): garantiza que el riel y las señales de la celda
+# vecina no queden a menos de eso de una señal propia.
+edge_clearance:        7.5
+edge_clearance_layers: ["49/0", "51/0"]
 
 # --- Pines ---
 # La biblioteca separa alimentación de señal por capa de texto:
