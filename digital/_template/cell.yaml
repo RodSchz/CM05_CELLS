@@ -1,41 +1,63 @@
 # Plantilla de metadatos — celda digital
 # Copiar a digital/cells/<nombre>/cell.yaml y completar.
+#
+# El esquema es el que usan las 16 celdas ya migradas de la biblioteca; si
+# agregas o quitas campos, hazlo en todas. Cada comentario "<-- " marca algo
+# que hay que decidir o medir, no copiar.
 
-name:        inv_x1              # debe coincidir con la carpeta y el subcircuito
+name:        NOMBRE_CELDA         # identico a la carpeta, al GDS y al .subckt
 type:        digital
-function:    "Inversor"
-drive:       1                    # fuerza relativa
-owner:       ""                   # usuario de GitHub del responsable
-status:      draft                # draft | drc_clean | lvs_clean | characterized | released
+category:    row                  # row | pad | frame
+function:    "Descripcion en una linea"
+owner:       ""                   # usuario de GitHub responsable
+status:      wip                  # wip | migrated | drc_clean | lvs_clean | characterized | released
 
 process:     CIDESI_CM05
+origen:      ""                   # de donde salio: issue #N, celda nueva, osu05 escalada...
 
 geometry:
-  width_um:   0.0                 # múltiplo del pitch
-  height_um:  0.0                 # altura de fila
-  sites:      1                   # ancho en unidades de pitch
+  width_um:   0.0                 # MEDIDO sobre la capa de boundary 100/0, multiplo de 2.5
+  height_um:  222.5               # fijo por el contrato de fila
+  origin:     [0.0, 0.0]          # esquina inferior izquierda del boundary
+  sites:      0.0                 # width_um / 2.5, entero
+  shapes:     0                   # numero de figuras en el GDS
 
+# Una entrada por pin, con la posicion real de la etiqueta.
+# Alimentacion en Metal1.text "49/1"; senal en Metal2.text "51/1".
 pins:
-  - {name: A,   direction: input,  layer: metal1}
-  - {name: Y,   direction: output, layer: metal1}
-  - {name: VDD, direction: power,  layer: metal1}
-  - {name: GND, direction: ground, layer: metal1}
+  - {name: GND, direction: ground, layer: "49/1", pos: [0.0, 10.0]}
+  - {name: VDD, direction: power,  layer: "49/1", pos: [0.0, 202.5]}
+  - {name: A,   direction: input,  layer: "51/1", pos: [0.0, 0.0]}
+  - {name: Out, direction: output, layer: "51/1", pos: [0.0, 0.0]}
+
+site_contract:
+  compliant:  false               # <-- true solo cuando check_site.py pase
+  violations: []
+  checked_by: "scripts/drc/check_site.py contra digital/site.yaml"
 
 verification:
-  drc:  not_run                   # not_run | clean | violations
-  lvs:  not_run                   # not_run | clean | mismatch
-  site: not_run                   # cumplimiento del contrato geométrico
-
-characterization:
-  corners:  [tt, ff, ss]
-  loads_ff: []                    # capacitancias de carga barridas
-  slews_ns: []                    # tiempos de transición de entrada
-  lib_generated: false
+  drc: not_run                    # not_run | clean | violations
+  lvs: not_run                    # not_run | clean | mismatch
 
 files:
-  schematic: inv_x1.asc
-  layout:    inv_x1.gds
-  netlist:   inv_x1.cdl
-  behavior:  inv_x1.v
+  ltspice:
+    schematic: ltspice/NOMBRE_CELDA.asc
+    symbol:    ltspice/NOMBRE_CELDA.asy
+  layout:   layout/NOMBRE_CELDA.gds
+  netlist:  layout/NOMBRE_CELDA.cir    # extraido por KLayout; null si falta
+  behavior: null                       # modelo de comportamiento, si existe
 
 notes: ""
+
+# ---------------------------------------------------------------------------
+# Bloqueos abiertos. Mientras esta lista no este vacia, la celda no puede
+# pasar a status: released. Un bloqueo declarado NO impide el merge; uno
+# escondido si. Borra la seccion completa si no hay ninguno.
+# ---------------------------------------------------------------------------
+blockers:
+  - id: ejemplo
+    severity: baja                # baja | media | alta
+    summary: >
+      Describe el problema y que haria falta para cerrarlo.
+    owner: ""
+    issue: null                   # numero del issue que lo atiende

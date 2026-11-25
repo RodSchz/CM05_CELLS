@@ -1,10 +1,10 @@
 * =====================================================================
-* tabla_verdad_2in.sp - Tabla de verdad y diagnostico de compatibilidad
-*                       CMOS 5 V para una compuerta de 2 entradas
+* tabla_verdad_3in.sp - Tabla de verdad y diagnostico de compatibilidad
+*                       CMOS 5 V para una compuerta de 3 entradas
 * Simulador objetivo: ngspice
 *
 * Que hace:
-*   1) Aplica las 4 combinaciones de entrada usando niveles de PEOR CASO:
+*   1) Aplica las 8 combinaciones de entrada usando niveles de PEOR CASO:
 *      "0" logico = VIL  y  "1" logico = VIH  (no 0 V / 5 V ideales).
 *   2) Mide la salida en DC (.op) sin carga y con una carga de corriente
 *      IOH / IOL en la direccion que corresponda al estado de salida.
@@ -16,7 +16,7 @@
 
 * ---------------- 1) Archivos del usuario (EDITAR) -------------------
 .include ..\..\..\..\pdk\tech\models\CM05_models.lib
-.include ..\layout\MI_CELDA          $ .subckt MI_CELDA A B C Y VDD GND
+.include ..\layout\MI_CELDA          $ .subckt MI_CELDA A B C Out VDD GND
 
 * ---------------- 2) Niveles CMOS 5 V (editables) --------------------
 * Referencia: niveles JEDEC/CMOS 5 V usuales (VIL = 0.3 VDD, VIH = 0.7 VDD)
@@ -31,6 +31,8 @@ VC   c   0 DC 0
 ILD  y   0 DC 0                    $ carga de salida (se ajusta en .control)
 
 * ---------------- 3) Instancia del DUT (EDITAR orden de pines) --------
+* El nodo local "y" se conecta al pin de salida de la celda, que en la
+* biblioteca CM05 se llama "Out".
 XDUT a b c y vdd 0 MI_CELDA
 
 .control
@@ -316,7 +318,9 @@ XDUT a b c y vdd 0 MI_CELDA
 
 * =====================================================================
 * NOTAS
-* 1) Ejecutar en lote:  ngspice -b tabla_verdad_2in.sp
+* 1) Ejecutar en lote:  ngspice -b tabla_verdad_3in.sp
+*    Copialo a la carpeta sim/ de tu celda: las rutas .include son
+*    relativas a digital/cells/<CELDA>/sim/.
 * 2) Si tu .subckt tiene otro orden de pines o nombre, solo cambia la
 *    linea XDUT; si los nodos de alimentacion son VDD/VSS globales, quita
 *    "vdd 0" de la instancia.
