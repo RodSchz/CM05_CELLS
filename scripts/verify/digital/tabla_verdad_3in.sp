@@ -16,7 +16,7 @@
 
 * ---------------- 1) Archivos del usuario (EDITAR) -------------------
 .include ..\..\..\..\pdk\tech\models\CM05_models.lib
-.include ..\layout\MI_CELDA          $ .subckt MI_CELDA VDD GND OUT C A B
+.include ..\layout\MI_CELDA          $ .subckt MI_CELDA A B C Y VDD GND
 
 * ---------------- 2) Niveles CMOS 5 V (editables) --------------------
 * Referencia: niveles JEDEC/CMOS 5 V usuales (VIL = 0.3 VDD, VIH = 0.7 VDD)
@@ -31,7 +31,7 @@ VC   c   0 DC 0
 ILD  y   0 DC 0                    $ carga de salida (se ajusta en .control)
 
 * ---------------- 3) Instancia del DUT (EDITAR orden de pines) --------
-XDUT a b c vdd 0 MI_CELDA
+XDUT a b c y vdd 0 MI_CELDA
 
 .control
   * ------------- Parametros del diagnostico (editables) --------------
