@@ -60,6 +60,26 @@ correcto, y se borra cuando esa hoja de datos esté en su `cell.yaml`.
 |---|---|---|
 | `Unidad_N.sp` | Dispositivo unitario n | Solo re-caracterizar y corregir documentación |
 | `Unidad_P.sp` | Dispositivo unitario p | Redibujar a 640/10, plegada en 8 dedos de 80 µm |
+| `RUNIT.sp` | Resistor unitario de poly, 10 kΩ | Diseño físico nuevo |
+| `CUNIT.sp` | Capacitor unitario M1-poly, 99.6 fF | Diseño físico nuevo |
+| `IMIR_CASC_N.sp` | Espejo cascodo n 1:1 | Diseño físico nuevo |
+| `LOAD_ACT.sp` | Cargas activas n y p | Diseño físico nuevo |
+| `DIFFPAIR_N.sp` | Par diferencial n con fuente de cola | Diseño físico nuevo |
+
+### Dos trampas de los pasivos
+
+Están en la cabecera de cada archivo, pero conviene que se vean desde aquí
+porque **ninguna de las dos la detecta el DRC, el LVS ni el PEX**:
+
+- **El capacitor tiene que quedar fuera de Pselect.** Sobre Pselect el óxido de
+  tapa es más delgado y la capacitancia sube un 23.8 % (82.22 contra
+  66.41 aF/µm²), pero el deck de extracción tiene el valor fijo en 66.41. Un
+  capacitor mal colocado pasa toda la verificación con su valor equivocado y el
+  error solo aparece al medir el silicio.
+- **El resistor admite exactamente dos contactos.** Con tres o más, el
+  extractor de KLayout **descarta el dispositivo completo** y lo avisa solo en
+  el log (`resistor shape ignored`), no en el reporte de LVS. Hay que leer el
+  log de extracción, no nada más el veredicto.
 
 ## Cómo simularlos
 
