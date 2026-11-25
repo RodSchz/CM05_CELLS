@@ -44,9 +44,11 @@ XDUT a b c y vdd 0 MI_CELDA
   let vol_max = 0.5                  $ salida "0" valida si V <= VOL_max
   let iload  = 20e-6                 $ |IOH| = |IOL| de prueba [A] (0 = sin carga)
 
-  * Funcion esperada (opcional): Y para AB = 000 a 111
-  * NAND: 1 1 1 1 1 1 1 0 | NOR: 1 0 0 0 0 0 0 0 | AND: 0 0 0 0 0 0 0 1 | OR: 0 1 1 1 1 1 1 1
-  * XOR : 0 1 1 0 1 0 0 1 | XNOR: 1 0 0 1 0 1 1 0
+  * Funcion esperada (opcional): salida para ABC = 000 a 111
+  * NAND3: 1 1 1 1 1 1 1 0 | NOR3: 1 0 0 0 0 0 0 0 | AND3: 0 0 0 0 0 0 0 1
+  * OR3  : 0 1 1 1 1 1 1 1 | XOR3: 0 1 1 0 1 0 0 1 | XNOR3: 1 0 0 1 0 1 1 0
+  * AOI21: 1 0 1 0 1 0 0 0   $ Out = NOT(A*B + C)
+  * OAI21: 1 1 1 0 1 0 1 0   $ Out = NOT((A+B)*C)
   let usar_esperado = 1              $ 0 = solo identificar la funcion
   compose esperado values 1 0 0 0 0 0 0 0  $<-- MI_CELDA
 
@@ -259,6 +261,14 @@ XDUT a b c y vdd 0 MI_CELDA
     end
     if cod = 150
       echo " FUNCION identificada: XNOR3 (Y = 1 0 0 1 0 1 1 0)"
+      let ok_f = 1
+    end
+    if cod = 168
+      echo " FUNCION identificada: AOI21 (Out = NOT(A*B + C))"
+      let ok_f = 1
+    end
+    if cod = 234
+      echo " FUNCION identificada: OAI21 (Out = NOT((A+B)*C))"
       let ok_f = 1
     end
     if ok_f = 0
