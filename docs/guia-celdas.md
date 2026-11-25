@@ -25,19 +25,39 @@ git fetch upstream
 git checkout -b cell/<nombre> upstream/main
 ```
 
-### Copia la plantilla
+### Crea la carpeta de la celda
+
+Las plantillas solo contienen metadatos (`cell.yaml`, y `design.md` en la
+analógica): git no versiona directorios vacíos, así que los subdirectorios se
+crean a mano.
 
 ```bash
 # celda digital
-cp -r digital/_template digital/cells/<nombre>
+C=<nombre>
+mkdir -p digital/cells/$C/layout digital/cells/$C/ltspice digital/cells/$C/sim
+cp digital/_template/cell.yaml digital/cells/$C/cell.yaml
 
 # celda analógica
-cp -r analog/_template analog/cells/<nombre>
+C=<nombre>
+mkdir -p analog/cells/$C/layout analog/cells/$C/ltspice analog/cells/$C/sim
+cp analog/_template/cell.yaml analog/_template/design.md analog/cells/$C/
 ```
 
-Renombra los archivos de la plantilla al nombre de tu celda. **El nombre debe
-ser idéntico** en la carpeta, el esquemático, el símbolo, el GDS y el
-subcircuito SPICE — viaja por todo el flujo y es donde más se rompen las cosas.
+`digital/_template/README.md` tiene la estructura completa de archivos que debe
+tener una celda terminada.
+
+Copia también el testbench que corresponda al número de entradas de tu celda:
+
+```bash
+cp scripts/verify/digital/tabla_verdad_3in.sp digital/cells/$C/sim/tabla_verdad.sp
+```
+
+Hay versiones de 1, 2, 3 y 4 entradas. **El testbench se copia, no se corre en
+su lugar:** sus rutas `.include` son relativas a `digital/cells/<CELDA>/sim/`.
+
+**El nombre debe ser idéntico** en la carpeta, el esquemático, el símbolo, el
+GDS y el subcircuito SPICE — viaja por todo el flujo y es donde más se rompen
+las cosas. La salida se llama **`Out`** en toda la biblioteca, no `Y`.
 
 ---
 
